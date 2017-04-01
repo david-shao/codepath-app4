@@ -15,5 +15,10 @@
     <string name="compose_save_draft">Do you wish to save a draft?</string>
     <string name="save">Save</string>
     <string name="discard">Discard</string>
+    <string name="tab_home_title">Home</string>
+    <string name="tab_mentions_title">Mentions</string>
+    <string name="action_profile">Profile</string>
+    <string name="tv_followings">%1$d Following</string>
+    <string name="tv_followers">%1$d Followers</string>
 
 </resources>

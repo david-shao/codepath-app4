@@ -5,8 +5,11 @@ import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -15,11 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.david.simpletweets.R;
 import com.david.simpletweets.TwitterApplication;
 import com.david.simpletweets.databinding.ActivityTimelineBinding;
 import com.david.simpletweets.fragments.ComposeTweetFragment;
-import com.david.simpletweets.fragments.TweetsListFragment;
+import com.david.simpletweets.fragments.HomeTimelineFragment;
+import com.david.simpletweets.fragments.MentionsTimelineFragment;
 import com.david.simpletweets.models.Tweet;
 import com.david.simpletweets.models.User;
 import com.david.simpletweets.network.TwitterClient;
@@ -34,7 +39,10 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     private User currentUser;
     private TwitterClient client;
     private FloatingActionButton fabCompose;
-    private TweetsListFragment fragTimeline;
+    private ViewPager vpTabs;
+    private PagerSlidingTabStrip tabStrip;
+    private HomeTimelineFragment fragHome;
+    private MentionsTimelineFragment fragMentions;
 
     private ActivityTimelineBinding binding;
 
@@ -59,10 +67,14 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         //update color
         fabCompose.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.bgColor)));
 
-        // access fragment
-        if (savedInstanceState == null) {
-            fragTimeline = (TweetsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragTimeline);    //TODO: data bind?
-        }
+        //get the viewpager
+        vpTabs = binding.vpTabs;
+        //set the viewpager adapter for the pager
+        vpTabs.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
+        //find the pager sliding tabs
+        tabStrip = binding.tabs;
+        //attach the tabstrip to the viewpager
+        tabStrip.setViewPager(vpTabs);
     }
 
     private void processIntent() {
@@ -92,8 +104,19 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (id) {
+            case R.id.miProfile:
+                showProfile();
+                break;
+        }
 
         return true;
+    }
+
+    private void showProfile() {
+        Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra("user", currentUser);
+        startActivity(i);
     }
 
     public User getCurrentUser() {
@@ -102,7 +125,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
     @Override
     public void onTweet(Tweet tweet) {
-        fragTimeline.addTweetToHead(tweet);
+        if (fragHome != null) {
+            fragHome.addTweetToHead(tweet);
+        }
     }
 
     /**
@@ -116,7 +141,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DETAILS) {
             List<Tweet> replies = data.getParcelableArrayListExtra("replies");
             if (!replies.isEmpty()) {
-                fragTimeline.addTweetsToHead(replies);
+                if (fragHome != null) {
+                    fragHome.addTweetsToHead(replies);
+                }
             }
         }
     }
@@ -133,6 +160,39 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             frag.show(fm, "fragment_compose");
         } else {
             showNetworkUnavailableMessage();
+        }
+    }
+
+    //Return the order of fragments in view pager
+    public class TweetsPagerAdapter extends FragmentPagerAdapter {
+        private String tabTitles[] = {getResources().getString(R.string.tab_home_title), getResources().getString(R.string.tab_mentions_title)};
+
+        //Adapter gets the manager insert or remove fragment from activity
+        public TweetsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        //the order and creation of fragments within the pager
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return new HomeTimelineFragment();
+            } else if (position == 1) {
+                return new MentionsTimelineFragment();
+            }
+            return null;
+        }
+
+        //return the tab title
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
+
+        //how many fragments there are to swipe between
+        @Override
+        public int getCount() {
+            return tabTitles.length;
         }
     }
 }

@@ -22,9 +22,16 @@ import com.david.simpletweets.decorators.CustomDividerItemDecoration;
 import com.david.simpletweets.listeners.EndlessRecyclerViewScrollListener;
 import com.david.simpletweets.models.Tweet;
 import com.david.simpletweets.network.TwitterClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by David on 3/30/2017.
@@ -41,6 +48,12 @@ public abstract class TweetsListFragment extends Fragment {
 
     TwitterClient client;
     Handler handler;
+
+    protected AsyncHttpResponseHandler tweetsHandler;
+
+    public TweetsListFragment() {
+
+    }
 
     //inflation logic
     @Nullable
@@ -129,5 +142,42 @@ public abstract class TweetsListFragment extends Fragment {
         rvTweets.scrollToPosition(0);
     }
 
-    protected abstract void populateTimeline(final long oldestId, final long newestId, final boolean refreshing);
+    protected void populateTimeline(final long oldestId, final long newestId, final boolean refreshing) {
+        tweetsHandler = new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                //                Log.d("DEBUG", "success! " + response.toString());
+                List<Tweet> newItems = Tweet.fromJSONArray(response);
+                if (refreshing) {
+                    tweets.clear();
+                    tweets.addAll(newItems);
+                    aTweets.notifyDataSetChanged();
+                    rvTweets.scrollToPosition(0);
+                    swipeContainer.setRefreshing(false);
+                } else {
+                    int curSize = aTweets.getItemCount();
+                    tweets.addAll(newItems);
+                    aTweets.notifyItemRangeInserted(curSize, newItems.size());
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (errorResponse != null) {
+                    Log.d("DEBUG", "failure code: " + statusCode + " " + errorResponse.toString());
+                }
+                //handle rate limit and try again later
+                if (statusCode == 429) {
+                    Log.d("DEBUG", "rate limit reached, will try again in 30 seconds.");
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            populateTimeline(oldestId, newestId, refreshing);
+                        }
+                    };
+                    handler.postDelayed(runnable, 30000);
+                }
+            }
+        };
+    }
 }

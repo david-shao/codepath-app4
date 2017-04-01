@@ -36,6 +36,15 @@ public class User extends BaseModel implements Parcelable {
     @Column
     private boolean isLoggedInUser;
 
+    @Column
+    private String tagLine;
+
+    @Column
+    private int followersCount;
+
+    @Column
+    private int followingsCount;
+
     public User() {
     }
 
@@ -59,6 +68,9 @@ public class User extends BaseModel implements Parcelable {
             user.uid = uid;
             user.screenName = "@" + jsonObject.getString("screen_name");
             user.profileImageUrl = jsonObject.getString("profile_image_url");
+            user.tagLine = jsonObject.getString("description");
+            user.followersCount = jsonObject.getInt("followers_count");
+            user.followingsCount = jsonObject.getInt("friends_count");
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
@@ -108,12 +120,39 @@ public class User extends BaseModel implements Parcelable {
         isLoggedInUser = loggedInUser;
     }
 
+    public String getTagLine() {
+        return tagLine;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public int getFollowingsCount() {
+        return followingsCount;
+    }
+
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public void setFollowingsCount(int followingsCount) {
+        this.followingsCount = followingsCount;
+    }
+
     private User(Parcel in) {
         this.name = in.readString();
         this.uid = in.readLong();
         this.screenName = in.readString();
         this.profileImageUrl = in.readString();
         this.isLoggedInUser = in.readByte() != 0;
+        this.tagLine = in.readString();
+        this.followersCount = in.readInt();
+        this.followingsCount = in.readInt();
     }
 
     @Override
@@ -128,6 +167,9 @@ public class User extends BaseModel implements Parcelable {
         parcel.writeString(this.screenName);
         parcel.writeString(this.profileImageUrl);
         parcel.writeByte((byte) (this.isLoggedInUser ? 1 : 0));
+        parcel.writeString(this.tagLine);
+        parcel.writeInt(this.followersCount);
+        parcel.writeInt(this.followingsCount);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {

@@ -93,7 +93,7 @@ public class ComposeTweetFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_compose, container, true);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_compose, container, false);
         draftUtil = new DraftUtil(getContext());
 
         return binding.getRoot();
