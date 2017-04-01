@@ -49,19 +49,16 @@ public class TwitterClient extends OAuthBaseClient {
     /**
      * Gets tweets from home timeline.
      * @param oldestId  Gets tweets older than oldestId, default to -1
-     * @param newestId  Gets tweets newer than newestId, default to -1
      * @param handler   Response handler
      */
-	public void getHomeTimeline(long oldestId, long newestId, AsyncHttpResponseHandler handler) {
+	public void getHomeTimeline(long oldestId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		//specify params
 		RequestParams params = new RequestParams();
 		params.put("count", COUNT);
+        Log.d("DEBUG", "getting home timeline with max_id: " + oldestId);
         if (oldestId > -1) {
             params.put("max_id", oldestId);
-        }
-        if (newestId > -1) {
-            params.put("since_id", newestId);
         }
 		//execute request
 		client.get(apiUrl, params, handler);
@@ -72,6 +69,7 @@ public class TwitterClient extends OAuthBaseClient {
         //specify params
         RequestParams params = new RequestParams();
         params.put("count", COUNT);
+        Log.d("DEBUG", "getting mentions timeline with max_id: " + oldestId);
         if (oldestId > -1) {
             params.put("max_id", oldestId);
         }
@@ -84,6 +82,7 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("count", COUNT);
         params.put("screen_name", screenName);
+        Log.d("DEBUG", "getting user timeline with max_id: " + oldestId);
         if (oldestId > -1) {
             params.put("max_id", oldestId);
         }
@@ -110,7 +109,7 @@ public class TwitterClient extends OAuthBaseClient {
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        Log.d("DEBUG", "network available returning: " + (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting()));
+//        Log.d("DEBUG", "network available returning: " + (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting()));
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 }

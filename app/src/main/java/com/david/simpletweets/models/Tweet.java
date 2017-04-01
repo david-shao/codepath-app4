@@ -50,9 +50,6 @@ public class Tweet extends BaseModel implements Parcelable {
     @Column
     private String videoUrl;
 
-    private static long oldestId = Long.MAX_VALUE;
-    private static long newestId = Long.MIN_VALUE;
-
     public Tweet() {
     }
 
@@ -64,9 +61,6 @@ public class Tweet extends BaseModel implements Parcelable {
         try {
             tweet.body = jsonObject.getString("text");
             tweet.uid = jsonObject.getLong("id");
-            if (tweet.uid > newestId) {
-                newestId = tweet.uid;
-            }
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
             if (jsonObject.has("extended_entities")) {
@@ -111,15 +105,6 @@ public class Tweet extends BaseModel implements Parcelable {
             try {
                 JSONObject tweetJson = jsonArray.getJSONObject(i);
                 Tweet tweet = Tweet.fromJSON(tweetJson);
-                //if the id is the same as what we have already, it's a dupe
-                long uid = tweet.getUid();
-                if (uid == oldestId) {
-                    continue;
-                }
-                //keep oldest and newest ids around for pagination
-                if (uid < oldestId) {
-                    oldestId = uid;
-                }
                 tweets.add(tweet);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -159,14 +144,6 @@ public class Tweet extends BaseModel implements Parcelable {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public static long getOldestId() {
-        return oldestId;
-    }
-
-    public static long getNewestId() {
-        return newestId;
     }
 
     public String getMediaUrl() {

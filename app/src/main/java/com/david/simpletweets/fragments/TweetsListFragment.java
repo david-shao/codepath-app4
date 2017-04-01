@@ -51,6 +51,8 @@ public abstract class TweetsListFragment extends Fragment {
     Handler handler;
     User currentUser;
 
+    long oldestId = -1;
+
     protected AsyncHttpResponseHandler tweetsHandler;
 
     public TweetsListFragment() {
@@ -64,7 +66,7 @@ public abstract class TweetsListFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tweets_list, container, false);
 
         setupViews();
-        populateTimeline(-1, -1, false);
+        populateTimeline(-1, false);
 
         return binding.getRoot();
     }
@@ -100,8 +102,8 @@ public abstract class TweetsListFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (client.isNetworkAvailable()) {
-                    Log.d("DEBUG", "scrolling to page " + (page));
-                    populateTimeline(Tweet.getOldestId() - 1, -1, false);
+                    Log.d("DEBUG", "scrolling to page " + page + " with oldestId: " + oldestId);
+                    populateTimeline(oldestId - 1, false);
                 } else {
                     showNetworkUnavailableMessage();
                 }
@@ -115,8 +117,7 @@ public abstract class TweetsListFragment extends Fragment {
             public void onRefresh() {
                 if (client.isNetworkAvailable()) {
                     Log.d("DEBUG", "refreshing tweets!");
-//                    populateTimeline(-1, Tweet.getNewestId(), true);
-                    populateTimeline(-1, -1, true);
+                    populateTimeline(-1, true);
                 } else {
                     showNetworkUnavailableMessage();
                     swipeContainer.setRefreshing(false);
@@ -145,7 +146,7 @@ public abstract class TweetsListFragment extends Fragment {
         rvTweets.scrollToPosition(0);
     }
 
-    protected void populateTimeline(final long oldestId, final long newestId, final boolean refreshing) {
+    protected void populateTimeline(final long oldestId, final boolean refreshing) {
         tweetsHandler = new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -153,6 +154,7 @@ public abstract class TweetsListFragment extends Fragment {
                 List<Tweet> newItems = Tweet.fromJSONArray(response);
                 if (refreshing) {
                     tweets.clear();
+                    scrollListener.resetState();    //reset scroll listener state so it'll know to load more again
                     tweets.addAll(newItems);
                     aTweets.notifyDataSetChanged();
                     rvTweets.scrollToPosition(0);
@@ -161,6 +163,13 @@ public abstract class TweetsListFragment extends Fragment {
                     int curSize = aTweets.getItemCount();
                     tweets.addAll(newItems);
                     aTweets.notifyItemRangeInserted(curSize, newItems.size());
+                }
+                if (newItems.size() > 0) {
+                    long newOldestId = newItems.get(newItems.size() - 1).getUid();
+                    if (oldestId > newOldestId || oldestId < 0) {
+                        TweetsListFragment.this.oldestId = newOldestId;
+                        Log.d("DEBUG", "new oldestId set to: " + TweetsListFragment.this.oldestId);
+                    }
                 }
             }
 
@@ -175,7 +184,7 @@ public abstract class TweetsListFragment extends Fragment {
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
-                            populateTimeline(oldestId, newestId, refreshing);
+                            populateTimeline(oldestId, refreshing);
                         }
                     };
                     handler.postDelayed(runnable, 30000);

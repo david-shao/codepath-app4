@@ -24,8 +24,8 @@ public class UserTimelineFragment extends TweetsListFragment {
         return userFragment;
     }
 
-    protected void populateTimeline(final long oldestId, final long newestId, final boolean refreshing) {
-        super.populateTimeline(oldestId, newestId, refreshing);
+    protected void populateTimeline(final long oldestId, final boolean refreshing) {
+        super.populateTimeline(oldestId, refreshing);
 
         String screenName = getArguments().getString("screenName");
         if (client.isNetworkAvailable()) {

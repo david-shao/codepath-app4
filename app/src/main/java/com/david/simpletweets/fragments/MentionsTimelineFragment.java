@@ -21,8 +21,8 @@ public class MentionsTimelineFragment extends TweetsListFragment {
         return frag;
     }
 
-    protected void populateTimeline(final long oldestId, final long newestId, final boolean refreshing) {
-        super.populateTimeline(oldestId, newestId, refreshing);
+    protected void populateTimeline(final long oldestId, final boolean refreshing) {
+        super.populateTimeline(oldestId, refreshing);
 
         if (client.isNetworkAvailable()) {
             client.getMentionsTimeline(oldestId, tweetsHandler);

@@ -23,11 +23,11 @@ public class HomeTimelineFragment extends TweetsListFragment {
 
     //send api request to get timeline json
     //fill listview by creating the tweet objects from json
-    protected void populateTimeline(final long oldestId, final long newestId, final boolean refreshing) {
-        super.populateTimeline(oldestId, newestId, refreshing);
+    protected void populateTimeline(final long oldestId, final boolean refreshing) {
+        super.populateTimeline(oldestId, refreshing);
 
         if (client.isNetworkAvailable()) {
-            client.getHomeTimeline(oldestId, newestId, tweetsHandler);
+            client.getHomeTimeline(oldestId, tweetsHandler);
         } else {
             showNetworkUnavailableMessage();
             //load from db if network not available
