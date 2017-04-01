@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ToolbarTheme"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             >
         </android.support.v7.widget.Toolbar>
 
@@ -26,6 +26,7 @@
             tools:src="@mipmap/ic_launcher"
             android:layout_below="@+id/toolbar"
             android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -74,6 +75,7 @@
             android:text="@{tweet.relativeTimeAgo}"
             android:textColor="@color/tweetMisc"
             android:layout_below="@+id/toolbar"
+            android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
@@ -85,6 +87,7 @@
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_toRightOf="@+id/ivProfileImage"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
             tools:src="@mipmap/ic_launcher"
             android:visibility="gone" />
 
@@ -98,6 +101,7 @@
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_below="@+id/tvBody"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:visibility="gone" />
