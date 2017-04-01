@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="user" type="com.david.simpletweets.models.User"/>
+    </data>
+
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="10dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            tools:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ivProfileImage"
+            android:layout_toEndOf="@+id/ivProfileImage"
+            android:layout_toRightOf="@+id/ivProfileImage"
+            android:textColor="@color/tweetBody"
+            tools:text="TextView"
+            android:text="@{user.name}"/>
+
+        <TextView
+            android:id="@+id/tvUserTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvName"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/ivProfileImage"
+            android:layout_toRightOf="@+id/ivProfileImage"
+            android:textColor="@color/tweetMisc"
+            tools:text="TextView"
+            android:text="@{user.tagLine}"/>
+    </RelativeLayout>
+</layout>

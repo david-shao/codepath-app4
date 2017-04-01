@@ -3,7 +3,6 @@ package com.david.simpletweets.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -56,7 +55,7 @@ public class TwitterClient extends OAuthBaseClient {
 		//specify params
 		RequestParams params = new RequestParams();
 		params.put("count", COUNT);
-        Log.d("DEBUG", "getting home timeline with max_id: " + oldestId);
+//        Log.d("DEBUG", "getting home timeline with max_id: " + oldestId);
         if (oldestId > -1) {
             params.put("max_id", oldestId);
         }
@@ -69,7 +68,7 @@ public class TwitterClient extends OAuthBaseClient {
         //specify params
         RequestParams params = new RequestParams();
         params.put("count", COUNT);
-        Log.d("DEBUG", "getting mentions timeline with max_id: " + oldestId);
+//        Log.d("DEBUG", "getting mentions timeline with max_id: " + oldestId);
         if (oldestId > -1) {
             params.put("max_id", oldestId);
         }
@@ -82,7 +81,7 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("count", COUNT);
         params.put("screen_name", screenName);
-        Log.d("DEBUG", "getting user timeline with max_id: " + oldestId);
+//        Log.d("DEBUG", "getting user timeline with max_id: " + oldestId);
         if (oldestId > -1) {
             params.put("max_id", oldestId);
         }
@@ -92,6 +91,28 @@ public class TwitterClient extends OAuthBaseClient {
 	public void getLoggedInUser(AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("account/verify_credentials.json");
         client.get(apiUrl, handler);
+    }
+
+    public void getFollowers(long userId, long cursor, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("followers/list.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", userId);
+        params.put("count", COUNT);
+        if (cursor > -1) {
+            params.put("cursor", cursor);
+        }
+        client.get(apiUrl, params, handler);
+    }
+
+    public void getFollowings(long userId, long cursor, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("friends/list.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", userId);
+        params.put("count", COUNT);
+        if (cursor > -1) {
+            params.put("cursor", cursor);
+        }
+        client.get(apiUrl, params, handler);
     }
 
 	public void postStatusUpdate(String body, long replyTweetId, AsyncHttpResponseHandler handler) {

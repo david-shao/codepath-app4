@@ -10,8 +10,12 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by David on 3/23/2017.
@@ -78,6 +82,22 @@ public class User extends BaseModel implements Parcelable {
         }
 
         return user;
+    }
+
+    public static List<User> fromJSONArray(JSONArray jsonArray) {
+        List<User> users = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject userJson = jsonArray.getJSONObject(i);
+                User user = User.fromJSON(userJson);
+                users.add(user);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return users;
     }
 
     public String getName() {

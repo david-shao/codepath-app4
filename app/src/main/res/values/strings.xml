@@ -20,5 +20,7 @@
     <string name="action_profile">Profile</string>
     <string name="tv_followings">%1$d Following</string>
     <string name="tv_followers">%1$d Followers</string>
+    <string name="title_followers">Followers</string>
+    <string name="title_followings">Following</string>
 
 </resources>

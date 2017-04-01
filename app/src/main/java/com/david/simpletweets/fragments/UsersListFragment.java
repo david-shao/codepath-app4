@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.david.simpletweets.adapters.TweetsArrayAdapter;
+import com.david.simpletweets.adapters.UsersArrayAdapter;
 import com.david.simpletweets.listeners.EndlessRecyclerViewScrollListener;
-import com.david.simpletweets.models.Tweet;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.david.simpletweets.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -25,27 +25,30 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by David on 3/30/2017.
+ * Created by David on 3/31/2017.
  */
 
-public abstract class TweetsListFragment extends RecyclerListFragment {
+public abstract class UsersListFragment extends RecyclerListFragment {
 
-    List<Tweet> tweets;
-    TweetsArrayAdapter aTweets;
+    public static final String TYPE_FOLLOWERS = "followers";
+    public static final String TYPE_FOLLOWINGS = "followings";
+
+    List<User> users;
+    UsersArrayAdapter aUsers;
     EndlessRecyclerViewScrollListener scrollListener;
 
-    long oldestId = -1;
+    JsonHttpResponseHandler usersHandler;
+    User targetUser;
 
-    protected AsyncHttpResponseHandler tweetsHandler;
+    long nextCursor = -1;
 
-    //inflation logic
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         setupViews();
-        populateTimeline(-1, false);
+        populate(-1, false);
 
         return view;
     }
@@ -59,19 +62,22 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
     }
 
     private void setup() {
-        tweets = new ArrayList<>();
-        aTweets = new TweetsArrayAdapter(getActivity(), tweets, currentUser);
+        users = new ArrayList<>();
+        aUsers = new UsersArrayAdapter(getActivity(), users, currentUser);
+        targetUser = getArguments().getParcelable("targetUser");
     }
 
     private void setupViews() {
-        rvList.setAdapter(aTweets);
+        rvList.setAdapter(aUsers);
 
         scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) rvList.getLayoutManager()) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (client.isNetworkAvailable()) {
-                    Log.d("DEBUG", "scrolling to page " + page + " with oldestId: " + oldestId);
-                    populateTimeline(oldestId - 1, false);
+                    if (nextCursor != 0) {
+                        Log.d("DEBUG", "scrolling to page " + page + " with cursor: " + nextCursor);
+                        populate(nextCursor, false);
+                    }
                 } else {
                     showNetworkUnavailableMessage();
                 }
@@ -84,8 +90,8 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
             @Override
             public void onRefresh() {
                 if (client.isNetworkAvailable()) {
-                    Log.d("DEBUG", "refreshing tweets!");
-                    populateTimeline(-1, true);
+                    Log.d("DEBUG", "refreshing users!");
+                    populate(-1, true);
                 } else {
                     showNetworkUnavailableMessage();
                     swipeContainer.setRefreshing(false);
@@ -94,42 +100,30 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
         });
     }
 
-    public void addTweetToHead(Tweet tweet) {
-        this.tweets.add(0, tweet);
-        aTweets.notifyItemInserted(0);
-        rvList.scrollToPosition(0);
-    }
-
-    public void addTweetsToHead(List<Tweet> tweets) {
-        this.tweets.addAll(0, tweets);
-        aTweets.notifyItemRangeInserted(0, tweets.size());
-        rvList.scrollToPosition(0);
-    }
-
-    protected void populateTimeline(final long oldestId, final boolean refreshing) {
-        tweetsHandler = new JsonHttpResponseHandler() {
+    protected void populate(final long cursor, final boolean refreshing) {
+        usersHandler = new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                //                Log.d("DEBUG", "success! " + response.toString());
-                List<Tweet> newItems = Tweet.fromJSONArray(response);
-                if (refreshing) {
-                    tweets.clear();
-                    scrollListener.resetState();    //reset scroll listener state so it'll know to load more again
-                    tweets.addAll(newItems);
-                    aTweets.notifyDataSetChanged();
-                    rvList.scrollToPosition(0);
-                    swipeContainer.setRefreshing(false);
-                } else {
-                    int curSize = aTweets.getItemCount();
-                    tweets.addAll(newItems);
-                    aTweets.notifyItemRangeInserted(curSize, newItems.size());
-                }
-                if (newItems.size() > 0) {
-                    long newOldestId = newItems.get(newItems.size() - 1).getUid();
-                    if (oldestId > newOldestId || oldestId < 0) {
-                        TweetsListFragment.this.oldestId = newOldestId;
-                        Log.d("DEBUG", "new oldestId set to: " + TweetsListFragment.this.oldestId);
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONArray usersJson = response.getJSONArray("users");
+                    List<User> newItems = User.fromJSONArray(usersJson);
+                    if (refreshing) {
+                        users.clear();
+                        scrollListener.resetState();    //reset scroll listener state so it'll know to load more again
+                        users.addAll(newItems);
+                        aUsers.notifyDataSetChanged();
+                        rvList.scrollToPosition(0);
+                        swipeContainer.setRefreshing(false);
+                    } else {
+                        int curSize = aUsers.getItemCount();
+                        users.addAll(newItems);
+                        aUsers.notifyItemRangeInserted(curSize, newItems.size());
                     }
+                    if (response.has("next_cursor")) {
+                        nextCursor = response.getLong("next_cursor");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -144,7 +138,7 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
-                            populateTimeline(oldestId, refreshing);
+                            populate(cursor, refreshing);
                         }
                     };
                     handler.postDelayed(runnable, 30000);

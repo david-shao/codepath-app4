@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(user.getScreenName());
 
         if (savedInstanceState == null) {
-            UserHeaderFragment userHeaderFragment = UserHeaderFragment.newInstance(user);
+            UserHeaderFragment userHeaderFragment = UserHeaderFragment.newInstance(user, loggedInUser);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.flHeader, userHeaderFragment)
                     .commit();
