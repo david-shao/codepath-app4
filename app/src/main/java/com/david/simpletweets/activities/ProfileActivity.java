@@ -19,6 +19,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ActivityProfileBinding binding;
     private Toolbar toolbar;
     private User user;
+    private User loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         user = getIntent().getParcelableExtra("user");
+        loggedInUser = getIntent().getParcelableExtra("currentUser");
         getSupportActionBar().setTitle(user.getScreenName());
 
         if (savedInstanceState == null) {
@@ -38,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
                     .commit();
 
             //create user timeline fragment
-            UserTimelineFragment userFragment = UserTimelineFragment.newInstance(user.getScreenName());
+            UserTimelineFragment userFragment = UserTimelineFragment.newInstance(loggedInUser, user.getScreenName());
             //display user timeline fragment withint this activity dynamically
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flFrag, userFragment);

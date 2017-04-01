@@ -115,12 +115,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
     private void showProfile() {
         Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra("currentUser", currentUser);
         i.putExtra("user", currentUser);
         startActivity(i);
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
     }
 
     @Override
@@ -176,9 +173,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new HomeTimelineFragment();
+                return HomeTimelineFragment.newInstance(currentUser);
             } else if (position == 1) {
-                return new MentionsTimelineFragment();
+                return MentionsTimelineFragment.newInstance(currentUser);
             }
             return null;
         }

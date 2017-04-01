@@ -21,6 +21,7 @@ import com.david.simpletweets.databinding.FragmentTweetsListBinding;
 import com.david.simpletweets.decorators.CustomDividerItemDecoration;
 import com.david.simpletweets.listeners.EndlessRecyclerViewScrollListener;
 import com.david.simpletweets.models.Tweet;
+import com.david.simpletweets.models.User;
 import com.david.simpletweets.network.TwitterClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -48,6 +49,7 @@ public abstract class TweetsListFragment extends Fragment {
 
     TwitterClient client;
     Handler handler;
+    User currentUser;
 
     protected AsyncHttpResponseHandler tweetsHandler;
 
@@ -76,8 +78,9 @@ public abstract class TweetsListFragment extends Fragment {
     }
 
     private void setup() {
+        currentUser = getArguments().getParcelable("currentUser");
         tweets = new ArrayList<>();
-        aTweets = new TweetsArrayAdapter(getActivity(), tweets);
+        aTweets = new TweetsArrayAdapter(getActivity(), tweets, currentUser);
         handler = new Handler();
         client = TwitterApplication.getRestClient();    //singleton client
     }

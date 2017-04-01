@@ -1,7 +1,10 @@
 package com.david.simpletweets.fragments;
 
+import android.os.Bundle;
+
 import com.david.simpletweets.models.Tweet;
 import com.david.simpletweets.models.Tweet_Table;
+import com.david.simpletweets.models.User;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 /**
@@ -9,6 +12,14 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
  */
 
 public class HomeTimelineFragment extends TweetsListFragment {
+
+    public static HomeTimelineFragment newInstance(User currentUser) {
+        HomeTimelineFragment frag = new HomeTimelineFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("currentUser", currentUser);
+        frag.setArguments(args);
+        return frag;
+    }
 
     //send api request to get timeline json
     //fill listview by creating the tweet objects from json

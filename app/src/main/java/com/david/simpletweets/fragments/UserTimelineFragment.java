@@ -1,7 +1,6 @@
 package com.david.simpletweets.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.david.simpletweets.models.Tweet;
 import com.david.simpletweets.models.Tweet_Table;
@@ -16,9 +15,10 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 public class UserTimelineFragment extends TweetsListFragment {
 
-    public static UserTimelineFragment newInstance(String screenName) {
+    public static UserTimelineFragment newInstance(User currentUser, String screenName) {
         UserTimelineFragment userFragment = new UserTimelineFragment();
         Bundle args = new Bundle();
+        args.putParcelable("currentUser", currentUser);
         args.putString("screenName", screenName);
         userFragment.setArguments(args);
         return userFragment;

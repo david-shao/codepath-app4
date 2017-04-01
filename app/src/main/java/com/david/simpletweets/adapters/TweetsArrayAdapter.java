@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.david.simpletweets.R;
+import com.david.simpletweets.activities.ProfileActivity;
 import com.david.simpletweets.activities.TimelineActivity;
 import com.david.simpletweets.activities.TweetDetailsActivity;
 import com.david.simpletweets.databinding.ItemTweetBinding;
@@ -24,6 +25,7 @@ import com.david.simpletweets.databinding.ItemTweetImageBinding;
 import com.david.simpletweets.databinding.ItemTweetVideoBinding;
 import com.david.simpletweets.fragments.ComposeTweetFragment;
 import com.david.simpletweets.models.Tweet;
+import com.david.simpletweets.models.User;
 
 import java.util.List;
 
@@ -55,7 +57,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                 Intent i = new Intent(context, TweetDetailsActivity.class);
                 i.putExtra("tweet", tweet);
                 i.putExtra("pos", position);
-                i.putExtra("currentUser", ((TimelineActivity) context).getCurrentUser());
+                i.putExtra("currentUser", currentUser);
                 ((AppCompatActivity) context).startActivityForResult(i, TimelineActivity.REQUEST_CODE_DETAILS);
             }
         }
@@ -83,8 +85,23 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                     int position = getAdapterPosition();
                     Tweet tweet = tweets.get(position);
                     FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
-                    ComposeTweetFragment frag = ComposeTweetFragment.newInstance(((TimelineActivity) context).getCurrentUser(), tweet);
+                    ComposeTweetFragment frag = ComposeTweetFragment.newInstance(currentUser, tweet);
                     frag.show(fm, "fragment_reply");
+                }
+            });
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition(); // gets item position
+                    if (position != RecyclerView.NO_POSITION) {
+                        Tweet tweet = tweets.get(position);
+                        //show profile of tweet's user
+                        Intent i = new Intent(context, ProfileActivity.class);
+                        i.putExtra("currentUser", currentUser);
+                        i.putExtra("user", tweet.getUser());
+                        context.startActivity(i);
+                    }
                 }
             });
         }
@@ -117,7 +134,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                     int position = getAdapterPosition();
                     Tweet tweet = tweets.get(position);
                     FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
-                    ComposeTweetFragment frag = ComposeTweetFragment.newInstance(((TimelineActivity) context).getCurrentUser(), tweet);
+                    ComposeTweetFragment frag = ComposeTweetFragment.newInstance(currentUser, tweet);
                     frag.show(fm, "fragment_reply");
                 }
             });
@@ -154,7 +171,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                     int position = getAdapterPosition();
                     Tweet tweet = tweets.get(position);
                     FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
-                    ComposeTweetFragment frag = ComposeTweetFragment.newInstance(((TimelineActivity) context).getCurrentUser(), tweet);
+                    ComposeTweetFragment frag = ComposeTweetFragment.newInstance(currentUser, tweet);
                     frag.show(fm, "fragment_reply");
                 }
             });
@@ -176,9 +193,12 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     // Store the context for easy access
     private Context context;
 
-    public TweetsArrayAdapter(@NonNull Context context, @NonNull List<Tweet> tweets) {
+    private User currentUser;
+
+    public TweetsArrayAdapter(@NonNull Context context, @NonNull List<Tweet> tweets, @NonNull User currentUser) {
         this.context = context;
         this.tweets = tweets;
+        this.currentUser = currentUser;
     }
 
     // Easy access to the context object in the recyclerview
