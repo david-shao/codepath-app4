@@ -100,7 +100,14 @@ public class Tweet extends BaseModel implements Parcelable {
                 }
             }
             tweet.favorited = jsonObject.getBoolean("favorited");
-            tweet.favoritesCount = jsonObject.getInt("favorite_count");
+            //get favorites count from "retweeted_status" if it exists
+            if (jsonObject.has("retweeted_status")) {
+                JSONObject retweetedStatus = jsonObject.getJSONObject("retweeted_status");
+                tweet.favoritesCount = retweetedStatus.getInt("favorite_count");
+            } else {
+                tweet.favoritesCount = jsonObject.getInt("favorite_count");
+            }
+
             tweet.retweeted = jsonObject.getBoolean("retweeted");
             tweet.retweetCount = jsonObject.getInt("retweet_count");
         } catch (JSONException e) {
