@@ -30,10 +30,11 @@ public class SearchActivity extends AppCompatActivity implements ComposeTweetFra
         setSupportActionBar(toolbar);
         //turn on back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.search_title));
 
         loggedInUser = getIntent().getParcelableExtra("currentUser");
         query = getIntent().getStringExtra("query");
+
+        getSupportActionBar().setTitle(getString(R.string.title_search_results, query));
 
         if (savedInstanceState == null) {
             SearchFragment frag = SearchFragment.newInstance(loggedInUser, query);

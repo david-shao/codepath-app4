@@ -2,7 +2,7 @@
 
 Tweeter is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: 22 hours spent in total
+Time spent: 27 hours spent in total
 
 ## User Stories
 
@@ -35,12 +35,12 @@ The following **bonus** features are implemented:
 
 * [X] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
 * [X] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
-* [ ] On the profile screen, leverage the [CoordinatorLayout](http://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events) to [apply scrolling behavior](https://hackmd.io/s/SJyDOCgU) as the user scrolls through the profile timeline.
-* [ ] User can view their direct messages (or send new ones)
+* [X] On the profile screen, leverage the [CoordinatorLayout](http://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events) to [apply scrolling behavior](https://hackmd.io/s/SJyDOCgU) as the user scrolls through the profile timeline.
+* [X] User can view their direct messages (or send new ones)
 
 The following **additional** features are implemented:
 
-* [ ] List anything else that you can get done to improve the app functionality!
+* [ ] User can follow/unfollow other users from profile view and also follower/followings lists
 
 ## Video Walkthrough
 
@@ -52,7 +52,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Debugging why my EndlessRecyclerViewScrollListener's onLoadMore() wasn't being hit after a refresh was very challenging. Also figuring out how to add a progress bar footer to recycler view with endless scrolling was quite tricky. It was difficult to figure out nested bindings when using includes. It was quite the challenge to figure out how to correctly communicate between multiple activities and their fragments.
+Debugging why my EndlessRecyclerViewScrollListener's onLoadMore() wasn't being hit after a refresh was very challenging. Also figuring out how to add a progress bar footer to recycler view with endless scrolling was quite tricky. In the end the behavior still didn't look as good as I would like. It was difficult to figure out nested bindings when using includes. It was quite the challenge to figure out how to correctly communicate between multiple activities and their fragments.
 
 ## Open-source libraries used
 

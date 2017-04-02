@@ -24,5 +24,12 @@
     <string name="title_followings">Following</string>
     <string name="title_progress">Loading...</string>
     <string name="search_title">Search</string>
+    <string name="title_search_results">Search Results For: %1$s</string>
+    <string name="title_messages">Messages</string>
+    <string name="tab_messages_sent">Sent</string>
+    <string name="tab_messages_received">Received</string>
+    <string name="message_compose_send">Send</string>
+    <string name="message_compose_user">To Screen Name...</string>
+    <string name="message_compose_body">Enter a message...</string>
 
 </resources>

@@ -36,6 +36,8 @@ public class ProfileActivity extends AppCompatActivity implements ComposeTweetFr
 
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
+        //turn on back button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         user = getIntent().getParcelableExtra("user");
         loggedInUser = getIntent().getParcelableExtra("currentUser");
@@ -70,6 +72,12 @@ public class ProfileActivity extends AppCompatActivity implements ComposeTweetFr
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
 
         return true;
     }

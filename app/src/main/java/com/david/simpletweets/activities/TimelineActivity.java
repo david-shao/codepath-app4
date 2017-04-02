@@ -135,6 +135,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             case R.id.miProfile:
                 showProfile();
                 break;
+            case R.id.miMessages:
+                showMessages();
+                break;
         }
 
         return true;
@@ -144,6 +147,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         Intent i = new Intent(this, ProfileActivity.class);
         i.putExtra("currentUser", currentUser);
         i.putExtra("user", currentUser);
+        startActivity(i);
+    }
+
+    private void showMessages() {
+        Intent i = new Intent(this, MessagesActivity.class);
+        i.putExtra("currentUser", currentUser);
         startActivity(i);
     }
 

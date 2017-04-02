@@ -133,6 +133,27 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(apiUrl, params, handler);
     }
 
+    public void getMessagesReceived(long oldestId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages.json");
+        RequestParams params = new RequestParams();
+        params.put("count", COUNT);
+        params.put("skip_status", true);
+        if (oldestId > -1) {
+            params.put("max_id", oldestId);
+        }
+        client.get(apiUrl, params, handler);
+    }
+
+    public void getMessagesSent(long oldestId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages/sent.json");
+        RequestParams params = new RequestParams();
+        params.put("count", COUNT);
+        if (oldestId > -1) {
+            params.put("max_id", oldestId);
+        }
+        client.get(apiUrl, params, handler);
+    }
+
 	public void postStatusUpdate(String body, long replyTweetId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/update.json");
 
@@ -170,6 +191,14 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl(String.format("statuses/unretweet/%1$d.json", tweetId));
         RequestParams params = new RequestParams();
         params.put("id", tweetId);
+        client.post(apiUrl, params, handler);
+    }
+
+    public void postMessage(String body, String targetScreenName, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages/new.json");
+        RequestParams params = new RequestParams();
+        params.put("text", body);
+        params.put("screen_name", targetScreenName);
         client.post(apiUrl, params, handler);
     }
 

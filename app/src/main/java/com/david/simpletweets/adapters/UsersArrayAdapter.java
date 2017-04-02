@@ -41,9 +41,6 @@ public class UsersArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHolde
         public void bindUser(User user) {
             binding.setUser(user);
             binding.executePendingBindings();
-
-            Glide.with(getContext()).load(user.getProfileImageUrl())
-                    .into(ivProfileImage);
         }
 
         @Override
