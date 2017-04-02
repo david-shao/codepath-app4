@@ -9,4 +9,7 @@
     <color name="partition">#D8D3D8</color>
     <color name="tweetBody">#343F43</color>
     <color name="tweetMisc">#A3A1A8</color>
+    <color name="tweetAction">#AAB8C2</color>
+    <color name="tweetFav">#FCAB39</color>
+    <color name="tweetRetweet">#1EC881</color>
 </resources>

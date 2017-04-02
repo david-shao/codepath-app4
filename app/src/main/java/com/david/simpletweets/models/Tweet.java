@@ -28,27 +28,39 @@ import java.util.List;
 public class Tweet extends BaseModel implements Parcelable {
     //list out attributes
     @Column
-    private String body;
+    String body;
 
     @Column
     @PrimaryKey
-    private long uid; //unique id for tweet
+    long uid; //unique id for tweet
 
     @Column
     @ForeignKey(saveForeignKeyModel = true)
-    private User user;
+    User user;
 
     @Column
-    private String createdAt;
+    String createdAt;
 
     @Column
-    private String mediaUrl;
+    String mediaUrl;
 
     @Column
-    private String mediaType;
+    String mediaType;
 
     @Column
-    private String videoUrl;
+    String videoUrl;
+
+    @Column
+    boolean favorited;
+
+    @Column
+    int favoritesCount;
+
+    @Column
+    boolean retweeted;
+
+    @Column
+    int retweetCount;
 
     public Tweet() {
     }
@@ -87,6 +99,10 @@ public class Tweet extends BaseModel implements Parcelable {
                     }
                 }
             }
+            tweet.favorited = jsonObject.getBoolean("favorited");
+            tweet.favoritesCount = jsonObject.getInt("favorite_count");
+            tweet.retweeted = jsonObject.getBoolean("retweeted");
+            tweet.retweetCount = jsonObject.getInt("retweet_count");
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
@@ -170,6 +186,38 @@ public class Tweet extends BaseModel implements Parcelable {
         this.videoUrl = videoUrl;
     }
 
+    public boolean isFavorited() {
+        return favorited;
+    }
+
+    public int getFavoritesCount() {
+        return favoritesCount;
+    }
+
+    public boolean isRetweeted() {
+        return retweeted;
+    }
+
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
+    }
+
+    public void setFavoritesCount(int favoritesCount) {
+        this.favoritesCount = favoritesCount;
+    }
+
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
+    public void setRetweetCount(int retweetCount) {
+        this.retweetCount = retweetCount;
+    }
+
     private Tweet(Parcel in) {
         this.body = in.readString();
         this.uid = in.readLong();
@@ -178,6 +226,10 @@ public class Tweet extends BaseModel implements Parcelable {
         this.mediaType = in.readString();
         this.mediaUrl = in.readString();
         this.videoUrl = in.readString();
+        this.favorited = in.readByte() != 0;
+        this.favoritesCount = in.readInt();
+        this.retweeted = in.readByte() != 0;
+        this.retweetCount = in.readInt();
     }
 
     public String getRelativeTimeAgo() {
@@ -199,6 +251,10 @@ public class Tweet extends BaseModel implements Parcelable {
         parcel.writeString(this.mediaType);
         parcel.writeString(this.mediaUrl);
         parcel.writeString(this.videoUrl);
+        parcel.writeByte((byte) (this.favorited ? 1 : 0));
+        parcel.writeInt(this.favoritesCount);
+        parcel.writeByte((byte) (this.retweeted ? 1 : 0));
+        parcel.writeInt(this.retweetCount);
     }
 
     public static final Parcelable.Creator<Tweet> CREATOR = new Parcelable.Creator<Tweet>() {

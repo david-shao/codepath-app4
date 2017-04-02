@@ -120,11 +120,13 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         startActivity(i);
     }
 
+    //when tweeting/replying from compose fragment
     @Override
     public void onTweet(Tweet tweet) {
         if (fragHome != null) {
             fragHome.addTweetToHead(tweet);
         }
+        //TODO: for now only add replies to home timeline
     }
 
     /**
@@ -136,11 +138,25 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DETAILS) {
+            int position = data.getIntExtra("position", 0);
+            Tweet updatedTweet = data.getParcelableExtra("updatedTweet");
+            String fragmentName = data.getStringExtra("fragmentName");
+            if (fragmentName.equals(HomeTimelineFragment.NAME)) {
+                if (fragHome != null) {
+                    fragHome.updateTweet(position, updatedTweet);
+                }
+            } else if (fragmentName.equals(MentionsTimelineFragment.NAME)) {
+                if (fragMentions != null) {
+                    fragMentions.updateTweet(position, updatedTweet);
+                }
+            }
+            //check for any tweets from replying from tweet details view
             List<Tweet> replies = data.getParcelableArrayListExtra("replies");
-            if (!replies.isEmpty()) {
+            if (replies != null && !replies.isEmpty()) {
                 if (fragHome != null) {
                     fragHome.addTweetsToHead(replies);
                 }
+                //TODO: for now only add replies to home timeline
             }
         }
     }
@@ -173,9 +189,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return HomeTimelineFragment.newInstance(currentUser);
+                fragHome = HomeTimelineFragment.newInstance(currentUser);
+                return fragHome;
             } else if (position == 1) {
-                return MentionsTimelineFragment.newInstance(currentUser);
+                fragMentions = MentionsTimelineFragment.newInstance(currentUser);
+                return fragMentions;
             }
             return null;
         }

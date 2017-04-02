@@ -89,15 +89,13 @@
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
-        <ImageButton
-            android:id="@+id/ibReply"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/ic_reply"
+        <include layout="@layout/tweet_actions"
+            android:id="@+id/incTweetActions"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_marginTop="5dp"
             android:layout_below="@+id/rlEmbed"
             android:layout_alignLeft="@+id/tvBody"
-            android:layout_alignStart="@+id/tvBody"
-            android:background="@android:color/transparent" />
+            android:layout_alignStart="@+id/tvBody" />
     </RelativeLayout>
 </layout>

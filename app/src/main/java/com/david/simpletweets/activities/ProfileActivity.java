@@ -1,5 +1,6 @@
 package com.david.simpletweets.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -10,16 +11,23 @@ import android.view.MenuItem;
 
 import com.david.simpletweets.R;
 import com.david.simpletweets.databinding.ActivityProfileBinding;
+import com.david.simpletweets.fragments.ComposeTweetFragment;
 import com.david.simpletweets.fragments.UserHeaderFragment;
 import com.david.simpletweets.fragments.UserTimelineFragment;
+import com.david.simpletweets.models.Tweet;
 import com.david.simpletweets.models.User;
 
-public class ProfileActivity extends AppCompatActivity {
+import java.util.List;
+
+import static com.david.simpletweets.activities.TimelineActivity.REQUEST_CODE_DETAILS;
+
+public class ProfileActivity extends AppCompatActivity implements ComposeTweetFragment.ComposeTweetListener {
 
     private ActivityProfileBinding binding;
     private Toolbar toolbar;
     private User user;
     private User loggedInUser;
+    private UserTimelineFragment userFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
                     .commit();
 
             //create user timeline fragment
-            UserTimelineFragment userFragment = UserTimelineFragment.newInstance(loggedInUser, user.getScreenName());
+            userFragment = UserTimelineFragment.newInstance(loggedInUser, user.getScreenName());
             //display user timeline fragment withint this activity dynamically
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flFrag, userFragment);
@@ -64,5 +72,39 @@ public class ProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         return true;
+    }
+
+    //when tweeting/replying from compose fragment
+    @Override
+    public void onTweet(Tweet tweet) {
+        //update profile tweets list if it's logged in user's profile
+        if (user.getUid() == loggedInUser.getUid()) {
+            userFragment.addTweetToHead(tweet);
+        }
+    }
+
+    /**
+     * Callback when other activities finish.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DETAILS) {
+            int position = data.getIntExtra("position", 0);
+            Tweet updatedTweet = data.getParcelableExtra("updatedTweet");
+            String fragmentName = data.getStringExtra("fragmentName");
+            if (fragmentName.equals(UserTimelineFragment.NAME)) {
+                userFragment.updateTweet(position, updatedTweet);
+            }
+            //check for any tweets from replying from tweet details view
+            List<Tweet> replies = data.getParcelableArrayListExtra("replies");
+            if (replies != null && !replies.isEmpty()) {
+                if (user.getUid() == loggedInUser.getUid()) {
+                    userFragment.addTweetsToHead(replies);
+                }
+            }
+        }
     }
 }

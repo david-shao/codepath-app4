@@ -13,6 +13,8 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 public class HomeTimelineFragment extends TweetsListFragment {
 
+    public static final String NAME = "home";
+
     public static HomeTimelineFragment newInstance(User currentUser) {
         HomeTimelineFragment frag = new HomeTimelineFragment();
         Bundle args = new Bundle();
@@ -38,5 +40,10 @@ public class HomeTimelineFragment extends TweetsListFragment {
                     .queryList());
             aTweets.notifyItemRangeInserted(0, tweets.size());
         }
+    }
+
+    @Override
+    public String getFragmentName() {
+        return NAME;
     }
 }

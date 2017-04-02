@@ -38,6 +38,7 @@
             android:text="@{tweet.user.name}"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_below="@+id/toolbar"
             android:textColor="@color/tweetBody"
             android:layout_toRightOf="@+id/ivProfileImage"
@@ -76,6 +77,7 @@
             android:textColor="@color/tweetMisc"
             android:layout_below="@+id/toolbar"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
@@ -102,21 +104,19 @@
             android:layout_below="@+id/tvBody"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:visibility="gone" />
 
-        <ImageButton
-            android:id="@+id/ibReply"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+        <include layout="@layout/tweet_actions"
+            android:id="@+id/incTweetActions"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
             android:layout_marginTop="5dp"
-            app:srcCompat="@drawable/ic_reply"
-            android:onClick="onTweetReply"
             android:layout_below="@+id/tvBody"
             android:layout_alignLeft="@+id/tvBody"
-            android:layout_alignStart="@+id/tvBody"
-            android:background="@android:color/transparent" />
+            android:layout_alignStart="@+id/tvBody" />
 
     </RelativeLayout>
 </layout>

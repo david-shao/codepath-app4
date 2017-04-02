@@ -60,7 +60,7 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
 
     private void setup() {
         tweets = new ArrayList<>();
-        aTweets = new TweetsArrayAdapter(getActivity(), tweets, currentUser);
+        aTweets = new TweetsArrayAdapter(getActivity(), tweets, currentUser, getFragmentName());
     }
 
     private void setupViews() {
@@ -155,4 +155,11 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
             }
         };
     }
+
+    public void updateTweet(int position, Tweet tweet) {
+        this.tweets.set(position, tweet);
+        aTweets.notifyItemChanged(position);
+    }
+
+    public abstract String getFragmentName();
 }

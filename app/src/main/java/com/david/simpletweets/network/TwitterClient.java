@@ -127,6 +127,34 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(apiUrl, params, handler);
     }
 
+    public void postFavorite(long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/create.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        client.post(apiUrl, params, handler);
+    }
+
+    public void postUnfavorite(long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/destroy.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        client.post(apiUrl, params, handler);
+    }
+
+    public void postRetweet(long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl(String.format("statuses/retweet/%1$d.json", tweetId));
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        client.post(apiUrl, params, handler);
+    }
+
+    public void postUnretweet(long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl(String.format("statuses/unretweet/%1$d.json", tweetId));
+        RequestParams params = new RequestParams();
+        params.put("id", tweetId);
+        client.post(apiUrl, params, handler);
+    }
+
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

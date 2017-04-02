@@ -2,7 +2,7 @@
 
 Tweeter is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: 15 hours spent in total
+Time spent: 20 hours spent in total
 
 ## User Stories
 
@@ -27,7 +27,7 @@ The following **optional** features are implemented:
 * [X] User can **"reply" to any tweet on their home timeline**
   * [X] The user that wrote the original tweet is automatically "@" replied in compose
 * [X] User can click on a tweet to be **taken to a "detail view"** of that tweet
- * [ ] User can take favorite (and unfavorite) or retweet actions on a tweet
+ * [X] User can take favorite (and unfavorite) or retweet actions on a tweet
 * [ ] User can **search for tweets matching a particular query** and see results
 * [ ] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
 
@@ -52,7 +52,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Debugging why my EndlessRecyclerViewScrollListener's onLoadMore() wasn't being hit after a refresh was very challenging. Also figuring out how to add a progress bar footer to recycler view with endless scrolling was quite tricky. 
+Debugging why my EndlessRecyclerViewScrollListener's onLoadMore() wasn't being hit after a refresh was very challenging. Also figuring out how to add a progress bar footer to recycler view with endless scrolling was quite tricky. It was difficult to figure out nested bindings when using includes. It was quite the challenge to figure out how to correctly communicate between multiple activities and their fragments.
 
 ## Open-source libraries used
 

@@ -25,29 +25,29 @@ import java.util.List;
 public class User extends BaseModel implements Parcelable {
 
     @Column
-    private String name;
+    String name;
 
     @Column
     @PrimaryKey
-    private long uid;
+    long uid;
 
     @Column
-    private String screenName;
+    String screenName;
 
     @Column
-    private String profileImageUrl;
+    String profileImageUrl;
 
     @Column
-    private boolean isLoggedInUser;
+    boolean isLoggedInUser;
 
     @Column
-    private String tagLine;
+    String tagLine;
 
     @Column
-    private int followersCount;
+    int followersCount;
 
     @Column
-    private int followingsCount;
+    int followingsCount;
 
     public User() {
     }

@@ -15,6 +15,8 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 public class UserTimelineFragment extends TweetsListFragment {
 
+    public static final String NAME = "user";
+
     public static UserTimelineFragment newInstance(User currentUser, String screenName) {
         UserTimelineFragment userFragment = new UserTimelineFragment();
         Bundle args = new Bundle();
@@ -43,5 +45,10 @@ public class UserTimelineFragment extends TweetsListFragment {
                     .queryList());
             aTweets.notifyItemRangeInserted(0, tweets.size());
         }
+    }
+
+    @Override
+    public String getFragmentName() {
+        return NAME;
     }
 }
