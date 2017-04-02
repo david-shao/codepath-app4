@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/search_tweets"
-        android:orderInCategory="5"
+        android:orderInCategory="3"
         android:title="@string/search_title"
         android:icon="@drawable/ic_search"
         app:showAsAction="ifRoom|collapseActionView"
@@ -12,14 +12,14 @@
 
     <item android:id="@+id/miMessages"
         app:showAsAction="always"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:icon="@drawable/ic_message"
         android:title="@string/title_messages"
         />
 
     <item android:id="@+id/miProfile"
         app:showAsAction="always"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         android:icon="@drawable/ic_profile"
         android:title="@string/action_profile"
         />
