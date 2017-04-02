@@ -257,9 +257,13 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
             //update button images
             if (tweet.isRetweeted()) {
                 ibRetweet.setImageResource(R.drawable.ic_repeat_on);
+            } else {
+                ibRetweet.setImageResource(R.drawable.ic_repeat);
             }
             if (tweet.isFavorited()) {
                 ibFavorite.setImageResource(R.drawable.ic_star_on);
+            } else {
+                ibFavorite.setImageResource(R.drawable.ic_star);
             }
         }
     }
@@ -301,11 +305,16 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
             //update button images
             if (tweet.isRetweeted()) {
                 ibRetweet.setImageResource(R.drawable.ic_repeat_on);
+            } else {
+                ibRetweet.setImageResource(R.drawable.ic_repeat);
             }
             if (tweet.isFavorited()) {
                 ibFavorite.setImageResource(R.drawable.ic_star_on);
+            } else {
+                ibFavorite.setImageResource(R.drawable.ic_star);
             }
 
+            ivEmbedImage.setImageResource(0);
             Glide.with(getContext()).load(tweet.getMediaUrl())
                     .into(ivEmbedImage);
         }
@@ -348,11 +357,16 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
             //update button images
             if (tweet.isRetweeted()) {
                 ibRetweet.setImageResource(R.drawable.ic_repeat_on);
+            } else {
+                ibRetweet.setImageResource(R.drawable.ic_repeat);
             }
             if (tweet.isFavorited()) {
                 ibFavorite.setImageResource(R.drawable.ic_star_on);
+            } else {
+                ibFavorite.setImageResource(R.drawable.ic_star);
             }
 
+            ivEmbedImage.setImageResource(0);
             Glide.with(getContext()).load(tweet.getMediaUrl())
                     .into(ivEmbedImage);
         }
