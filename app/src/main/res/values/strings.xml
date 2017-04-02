@@ -23,5 +23,6 @@
     <string name="title_followers">Followers</string>
     <string name="title_followings">Following</string>
     <string name="title_progress">Loading...</string>
+    <string name="search_title">Search</string>
 
 </resources>

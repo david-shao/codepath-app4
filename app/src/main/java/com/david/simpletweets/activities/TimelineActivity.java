@@ -9,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -43,6 +45,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     private PagerSlidingTabStrip tabStrip;
     private HomeTimelineFragment fragHome;
     private MentionsTimelineFragment fragMentions;
+    private SearchView svTweets;
 
     private ActivityTimelineBinding binding;
 
@@ -94,6 +97,30 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search_tweets);
+        svTweets = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        svTweets.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent i = new Intent(TimelineActivity.this, SearchActivity.class);
+                i.putExtra("currentUser", currentUser);
+                i.putExtra("query", query);
+                startActivity(i);
+
+                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                svTweets.clearFocus();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
         return true;
     }

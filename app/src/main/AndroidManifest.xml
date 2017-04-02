@@ -53,7 +53,8 @@
             android:name=".activities.TweetDetailsActivity"
             android:label="@string/activity_tweet" />
         <activity android:name=".activities.ProfileActivity" />
-        <activity android:name=".activities.UsersActivity"></activity>
+        <activity android:name=".activities.UsersActivity" />
+        <activity android:name=".activities.SearchActivity"></activity>
     </application>
 
 </manifest>
