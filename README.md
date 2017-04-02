@@ -2,7 +2,7 @@
 
 Tweeter is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: 11 hours spent in total
+Time spent: 15 hours spent in total
 
 ## User Stories
 
@@ -23,9 +23,9 @@ The following **optional** features are implemented:
 
 * [X] User can view following / followers list through the profile
 * [X] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
-* [ ] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
-* [ ] User can **"reply" to any tweet on their home timeline**
-  * [ ] The user that wrote the original tweet is automatically "@" replied in compose
+* [X] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
+* [X] User can **"reply" to any tweet on their home timeline**
+  * [X] The user that wrote the original tweet is automatically "@" replied in compose
 * [X] User can click on a tweet to be **taken to a "detail view"** of that tweet
  * [ ] User can take favorite (and unfavorite) or retweet actions on a tweet
 * [ ] User can **search for tweets matching a particular query** and see results
@@ -52,7 +52,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Debugging why my EndlessRecyclerViewScrollListener's onLoadMore() wasn't being hit after a refresh was very challenging.
+Debugging why my EndlessRecyclerViewScrollListener's onLoadMore() wasn't being hit after a refresh was very challenging. Also figuring out how to add a progress bar footer to recycler view with endless scrolling was quite tricky. 
 
 ## Open-source libraries used
 

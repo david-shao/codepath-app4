@@ -29,6 +29,7 @@ public class UserTimelineFragment extends TweetsListFragment {
 
         String screenName = getArguments().getString("screenName");
         if (client.isNetworkAvailable()) {
+            aTweets.showFooterProgressBar();
             client.getUserTimeline(screenName, oldestId, tweetsHandler);
         } else {
             showNetworkUnavailableMessage();

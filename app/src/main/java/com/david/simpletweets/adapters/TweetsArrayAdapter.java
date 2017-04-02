@@ -20,6 +20,7 @@ import com.david.simpletweets.R;
 import com.david.simpletweets.activities.ProfileActivity;
 import com.david.simpletweets.activities.TimelineActivity;
 import com.david.simpletweets.activities.TweetDetailsActivity;
+import com.david.simpletweets.databinding.FooterProgressBinding;
 import com.david.simpletweets.databinding.ItemTweetBinding;
 import com.david.simpletweets.databinding.ItemTweetImageBinding;
 import com.david.simpletweets.databinding.ItemTweetVideoBinding;
@@ -33,7 +34,7 @@ import java.util.List;
  * Created by David on 3/23/2017.
  */
 // taking Tweet objects and turning them into Views displayed in the list
-public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.ViewHolderBase> {
+public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHolder> {
 
     public abstract class ViewHolderBase extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView ivProfileImage;
@@ -208,12 +209,16 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     // Usually involves inflating a layout from XML and returning the holder
     @Override
-    public TweetsArrayAdapter.ViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        ViewHolderBase viewHolder;
+        RecyclerView.ViewHolder viewHolder;
 
         switch (viewType) {
+            case TYPE_FOOTER:
+                FooterProgressBinding footerBinding = DataBindingUtil.inflate(inflater, R.layout.footer_progress, parent, false);
+                viewHolder = new FooterViewHolder(footerBinding);
+                break;
             case VIDEO:
                 ItemTweetVideoBinding bindingVideo = DataBindingUtil.inflate(inflater, R.layout.item_tweet_video, parent, false);
                 viewHolder = new VideoViewHolder(bindingVideo);
@@ -234,10 +239,14 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(TweetsArrayAdapter.ViewHolderBase viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        Tweet tweet = this.tweets.get(position);
-        configureViewHolder(viewHolder, tweet);
+        if (isPositionFooter(position)) {
+            footerViewHolder = (FooterViewHolder) viewHolder;
+        } else {
+            Tweet tweet = this.tweets.get(position);
+            configureViewHolder((ViewHolderBase) viewHolder, tweet);
+        }
     }
 
     private void configureViewHolder(TweetsArrayAdapter.ViewHolderBase viewHolder, Tweet tweet) {
@@ -252,11 +261,15 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
-        return this.tweets.size();
+//        Log.d("DEBUG", "item count returning: " + this.tweets.size() + super.getItemCount());
+        return this.tweets.size() + super.getItemCount(); //+1 for footer
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (isPositionFooter(position)) {
+            return TYPE_FOOTER;
+        }
         Tweet tweet = this.tweets.get(position);
         if (!TextUtils.isEmpty(tweet.getMediaType())) {
             if (tweet.getMediaType().equals("photo")) {
@@ -266,6 +279,10 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
             }
         }
         return GENERIC;
+    }
+
+    protected boolean isPositionFooter (int position) {
+        return position == this.tweets.size();
     }
 
 }

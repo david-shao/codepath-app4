@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -50,6 +51,7 @@ public class ComposeTweetFragment extends DialogFragment {
     TextView tvName;
     EditText etBody;
     TextView tvCharCount;
+    ProgressBar pbLoading;
 
     User user;
     Tweet tweet;
@@ -108,6 +110,7 @@ public class ComposeTweetFragment extends DialogFragment {
         tvName = binding.tvName;
         etBody = binding.etBody;
         tvCharCount = binding.tvCharCount;
+        pbLoading = binding.pbLoading;
 
         user = getArguments().getParcelable("user");
         tweet = getArguments().getParcelable("tweet");
@@ -181,6 +184,8 @@ public class ComposeTweetFragment extends DialogFragment {
                     replyTweetId = tweet.getUid();
                 }
 
+                btnTweet.setVisibility(View.INVISIBLE);
+                pbLoading.setVisibility(View.VISIBLE);
                 TwitterApplication.getRestClient().postStatusUpdate(tweetBody, replyTweetId, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -195,6 +200,8 @@ public class ComposeTweetFragment extends DialogFragment {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         Log.d("DEBUG", "Tweeting failed " + errorResponse.toString());
+                        pbLoading.setVisibility(View.GONE);
+                        btnTweet.setVisibility(View.VISIBLE);
                     }
                 });
             }

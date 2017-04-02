@@ -111,6 +111,7 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 //                Log.d("DEBUG", "success! " + response.toString());
+                aTweets.hideFooterProgressBar();
                 List<Tweet> newItems = Tweet.fromJSONArray(response);
                 if (refreshing) {
                     tweets.clear();
@@ -148,6 +149,8 @@ public abstract class TweetsListFragment extends RecyclerListFragment {
                         }
                     };
                     handler.postDelayed(runnable, 30000);
+                } else {
+                    aTweets.hideFooterProgressBar();
                 }
             }
         };

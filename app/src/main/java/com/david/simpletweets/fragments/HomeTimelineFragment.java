@@ -27,6 +27,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
         super.populateTimeline(oldestId, refreshing);
 
         if (client.isNetworkAvailable()) {
+            aTweets.showFooterProgressBar();
             client.getHomeTimeline(oldestId, tweetsHandler);
         } else {
             showNetworkUnavailableMessage();

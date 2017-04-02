@@ -25,6 +25,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
         super.populateTimeline(oldestId, refreshing);
 
         if (client.isNetworkAvailable()) {
+            aTweets.showFooterProgressBar();
             client.getMentionsTimeline(oldestId, tweetsHandler);
         } else {
             showNetworkUnavailableMessage();

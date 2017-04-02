@@ -23,6 +23,7 @@ public class FollowersFragment extends UsersListFragment {
         super.populate(cursor, refreshing);
 
         if (client.isNetworkAvailable()) {
+            aUsers.showFooterProgressBar();
             client.getFollowers(targetUser.getUid(), cursor, usersHandler);
         } else {
             showNetworkUnavailableMessage();

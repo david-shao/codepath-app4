@@ -104,6 +104,7 @@ public abstract class UsersListFragment extends RecyclerListFragment {
         usersHandler = new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                aUsers.hideFooterProgressBar();
                 try {
                     JSONArray usersJson = response.getJSONArray("users");
                     List<User> newItems = User.fromJSONArray(usersJson);
@@ -142,6 +143,8 @@ public abstract class UsersListFragment extends RecyclerListFragment {
                         }
                     };
                     handler.postDelayed(runnable, 30000);
+                } else {
+                    aUsers.hideFooterProgressBar();
                 }
             }
         };

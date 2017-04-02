@@ -32,6 +32,15 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/pbLoading"
+            android:layout_alignLeft="@+id/btnTweet"
+            android:layout_alignTop="@+id/btnTweet"
+            android:visibility="gone"/>
+
         <ImageView
             android:id="@+id/ivProfileImage"
             android:layout_width="50dp"

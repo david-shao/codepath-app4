@@ -16,7 +16,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     // The current offset index of data you have loaded
     private int currentPage = 0;
     // The total number of items in the dataset after the last load
-    private int previousTotalItemCount = 0;
+    private int previousTotalItemCount = 1; //default to 1 for footer
     // True if we are still waiting for the last set of data to load.
     private boolean loading = true;
     // Sets the starting page index
@@ -100,7 +100,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     // Call this method whenever performing new searches
     public void resetState() {
         this.currentPage = this.startingPageIndex;
-        this.previousTotalItemCount = 0;
+        this.previousTotalItemCount = 1;
         this.loading = true;
     }
 

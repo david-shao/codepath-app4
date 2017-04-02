@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.david.simpletweets.R;
 import com.david.simpletweets.activities.ProfileActivity;
+import com.david.simpletweets.databinding.FooterProgressBinding;
 import com.david.simpletweets.databinding.ItemUserBinding;
 import com.david.simpletweets.models.User;
 
@@ -22,7 +23,7 @@ import java.util.List;
  * Created by David on 3/31/2017.
  */
 
-public class UsersArrayAdapter extends RecyclerView.Adapter<UsersArrayAdapter.ViewHolder> {
+public class UsersArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ItemUserBinding binding;
@@ -59,6 +60,8 @@ public class UsersArrayAdapter extends RecyclerView.Adapter<UsersArrayAdapter.Vi
         }
     }
 
+    private final int TYPE_GENERIC = 0;
+
     private List<User> users;
     // Store the context for easy access
     private Context context;
@@ -78,21 +81,37 @@ public class UsersArrayAdapter extends RecyclerView.Adapter<UsersArrayAdapter.Vi
 
     // Usually involves inflating a layout from XML and returning the holder
     @Override
-    public UsersArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        ItemUserBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_user, parent, false);
-        ViewHolder viewHolder = new ViewHolder(binding);
+        RecyclerView.ViewHolder viewHolder;
+
+        switch (viewType) {
+            case TYPE_FOOTER:
+                FooterProgressBinding footerBinding = DataBindingUtil.inflate(inflater, R.layout.footer_progress, parent, false);
+                viewHolder = new FooterViewHolder(footerBinding);
+                break;
+            case TYPE_GENERIC:
+            default:
+                ItemUserBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_user, parent, false);
+                viewHolder = new ViewHolder(binding);
+                break;
+        }
 
         return viewHolder;
     }
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(UsersArrayAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        User user = this.users.get(position);
-        configureViewHolder(viewHolder, user);
+
+        if (isPositionFooter(position)) {
+            footerViewHolder = (FooterViewHolder) viewHolder;
+        } else {
+            User user = this.users.get(position);
+            configureViewHolder((ViewHolder) viewHolder, user);
+        }
     }
 
     private void configureViewHolder(UsersArrayAdapter.ViewHolder viewHolder, User user) {
@@ -107,6 +126,19 @@ public class UsersArrayAdapter extends RecyclerView.Adapter<UsersArrayAdapter.Vi
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
-        return this.users.size();
+        return this.users.size() + super.getItemCount(); //+1 for footer
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isPositionFooter(position)) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_GENERIC;
+    }
+
+    protected boolean isPositionFooter (int position) {
+        return position == this.users.size();
+    }
+
 }
