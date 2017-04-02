@@ -11,8 +11,6 @@ import com.loopj.android.http.RequestParams;
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
-import static com.david.simpletweets.models.User_Table.screenName;
-
 /*
  * 
  * This is the object responsible for communicating with a REST API. 
@@ -125,6 +123,13 @@ public class TwitterClient extends OAuthBaseClient {
         if (oldestId > -1) {
             params.put("max_id", oldestId);
         }
+        client.get(apiUrl, params, handler);
+    }
+
+    public void getUser(String screenName, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
         client.get(apiUrl, params, handler);
     }
 

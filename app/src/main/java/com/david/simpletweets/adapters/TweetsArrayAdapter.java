@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -29,11 +30,13 @@ import com.david.simpletweets.databinding.ItemTweetVideoBinding;
 import com.david.simpletweets.fragments.ComposeTweetFragment;
 import com.david.simpletweets.models.Tweet;
 import com.david.simpletweets.models.User;
+import com.david.simpletweets.utils.PatternEditableBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -63,10 +66,7 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
                 if (position != RecyclerView.NO_POSITION) {
                     Tweet tweet = tweets.get(position);
                     //show profile of tweet's user
-                    Intent i = new Intent(context, ProfileActivity.class);
-                    i.putExtra("currentUser", currentUser);
-                    i.putExtra("user", tweet.getUser());
-                    context.startActivity(i);
+                    showProfile(tweet.getUser());
                 }
             }
         };
@@ -167,6 +167,26 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
             }
         };
 
+        protected PatternEditableBuilder patternBuilder = new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"), ContextCompat.getColor(context, R.color.controlActivated),
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                TwitterApplication.getRestClient().getUser(text, new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        User user = User.fromJSON(response);
+                                        showProfile(user);
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        Log.d("DEBUG", "Getting user failed: " + errorResponse.toString());
+                                    }
+                                });
+                            }
+                        });
+
         public ViewHolderBase(View itemView) {
             super(itemView);
 
@@ -187,7 +207,29 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
             }
         }
 
-        public abstract void bindTweet(Tweet tweet);
+        public void bindTweet(Tweet tweet) {
+            //update button images
+            if (tweet.isRetweeted()) {
+                ibRetweet.setImageResource(R.drawable.ic_repeat_on);
+            } else {
+                ibRetweet.setImageResource(R.drawable.ic_repeat);
+            }
+            if (tweet.isFavorited()) {
+                ibFavorite.setImageResource(R.drawable.ic_star_on);
+            } else {
+                ibFavorite.setImageResource(R.drawable.ic_star);
+            }
+
+            //add clickable spans
+            patternBuilder.into(tvBody);
+        }
+
+        protected void showProfile(User user) {
+            Intent i = new Intent(context, ProfileActivity.class);
+            i.putExtra("currentUser", currentUser);
+            i.putExtra("user", user);
+            context.startActivity(i);
+        }
 
         protected void doRetweet(Tweet tweet) {
             tweet.setRetweetCount(tweet.getRetweetCount() + 1);
@@ -254,17 +296,7 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
             binding.incTweetActions.setTweet(tweet);
             binding.executePendingBindings();
 
-            //update button images
-            if (tweet.isRetweeted()) {
-                ibRetweet.setImageResource(R.drawable.ic_repeat_on);
-            } else {
-                ibRetweet.setImageResource(R.drawable.ic_repeat);
-            }
-            if (tweet.isFavorited()) {
-                ibFavorite.setImageResource(R.drawable.ic_star_on);
-            } else {
-                ibFavorite.setImageResource(R.drawable.ic_star);
-            }
+            super.bindTweet(tweet);
         }
     }
 
@@ -297,26 +329,14 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
 
         public void bindTweet(Tweet tweet) {
             binding.setTweet(tweet);
-            binding.executePendingBindings();
-
             binding.incTweetActions.setTweet(tweet);
-            binding.incTweetActions.executePendingBindings();
-
-            //update button images
-            if (tweet.isRetweeted()) {
-                ibRetweet.setImageResource(R.drawable.ic_repeat_on);
-            } else {
-                ibRetweet.setImageResource(R.drawable.ic_repeat);
-            }
-            if (tweet.isFavorited()) {
-                ibFavorite.setImageResource(R.drawable.ic_star_on);
-            } else {
-                ibFavorite.setImageResource(R.drawable.ic_star);
-            }
+            binding.executePendingBindings();
 
             ivEmbedImage.setImageResource(0);
             Glide.with(getContext()).load(tweet.getMediaUrl())
                     .into(ivEmbedImage);
+
+            super.bindTweet(tweet);
         }
     }
 
@@ -349,26 +369,14 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
 
         public void bindTweet(Tweet tweet) {
             binding.setTweet(tweet);
-            binding.executePendingBindings();
-
             binding.incTweetActions.setTweet(tweet);
-            binding.incTweetActions.executePendingBindings();
-
-            //update button images
-            if (tweet.isRetweeted()) {
-                ibRetweet.setImageResource(R.drawable.ic_repeat_on);
-            } else {
-                ibRetweet.setImageResource(R.drawable.ic_repeat);
-            }
-            if (tweet.isFavorited()) {
-                ibFavorite.setImageResource(R.drawable.ic_star_on);
-            } else {
-                ibFavorite.setImageResource(R.drawable.ic_star);
-            }
+            binding.executePendingBindings();
 
             ivEmbedImage.setImageResource(0);
             Glide.with(getContext()).load(tweet.getMediaUrl())
                     .into(ivEmbedImage);
+
+            super.bindTweet(tweet);
         }
     }
 
