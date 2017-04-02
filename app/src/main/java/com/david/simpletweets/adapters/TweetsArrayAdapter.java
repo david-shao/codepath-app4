@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.david.simpletweets.R;
 import com.david.simpletweets.TwitterApplication;
 import com.david.simpletweets.activities.ProfileActivity;
+import com.david.simpletweets.activities.SearchActivity;
 import com.david.simpletweets.activities.TimelineActivity;
 import com.david.simpletweets.activities.TweetDetailsActivity;
 import com.david.simpletweets.databinding.FooterProgressBinding;
@@ -184,6 +185,17 @@ public class TweetsArrayAdapter extends FooterArrayAdapter<RecyclerView.ViewHold
                                         Log.d("DEBUG", "Getting user failed: " + errorResponse.toString());
                                     }
                                 });
+                            }
+                        })
+                .addPattern(Pattern.compile("\\#(\\w+)"), ContextCompat.getColor(context, R.color.controlActivated),
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                //search for hashtag
+                                Intent i = new Intent(context, SearchActivity.class);
+                                i.putExtra("currentUser", currentUser);
+                                i.putExtra("query", text);
+                                context.startActivity(i);
                             }
                         });
 
