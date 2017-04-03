@@ -8,6 +8,7 @@
 
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:padding="10dp"
+        android:background="@drawable/profile_bg"
         android:layout_width="match_parent" android:layout_height="match_parent">
 
         <ImageView
@@ -42,7 +43,6 @@
             android:layout_toRightOf="@+id/ivProfileImage"
             android:layout_toLeftOf="@+id/ibFollow"
             android:layout_toStartOf="@+id/ibFollow"
-            android:textColor="@color/tweetMisc"
             tools:text="TextView"
             android:text="@{user.tagLine}"/>
 
@@ -71,6 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{@string/tv_followers(user.followersCount)}"
+                android:textAllCaps="true"
+                android:textSize="12sp"
                 tools:text="5 Followers"/>
 
             <TextView
@@ -79,6 +81,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
+                android:textAllCaps="true"
+                android:textSize="12sp"
                 android:text="@{@string/tv_followings(user.followingsCount)}"
                 tools:text="5 Following"/>
 

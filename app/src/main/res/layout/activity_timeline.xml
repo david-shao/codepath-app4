@@ -34,6 +34,7 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                style="@style/TabStyle"
                 app:pstsShouldExpand="true"
                 app:pstsTextAllCaps="true">
             </com.astuetz.PagerSlidingTabStrip>

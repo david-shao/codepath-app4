@@ -2,7 +2,7 @@
 <resources>
     <color name="cursorAccent">#FFFFFF</color>
     <color name="controlNormal">#FFFFFF</color>
-    <color name="controlActivated">#1EC881</color>
+    <color name="controlActivated">#5EAFED</color>
     <color name="bgColor">#5EAFED</color>
     <color name="borderColor">#FFFFFF</color>
     <color name="buttonTextColor">#FFFFFF</color>
@@ -12,4 +12,5 @@
     <color name="tweetAction">#AAB8C2</color>
     <color name="tweetFav">#FCAB39</color>
     <color name="tweetRetweet">#1EC881</color>
+    <color name="profileHeader">#D5ECFB</color>
 </resources>
