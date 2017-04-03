@@ -2,7 +2,7 @@
 
 Tweeter is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: 27 hours spent in total
+Time spent: 28 hours spent in total
 
 ## User Stories
 
@@ -40,7 +40,7 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [ ] User can follow/unfollow other users from profile view and also follower/followings lists
+* [X] User can follow/unfollow other users from profile view and also follower/followings lists
 
 ## Video Walkthrough
 

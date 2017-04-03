@@ -40,9 +40,23 @@
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_toRightOf="@+id/ivProfileImage"
+            android:layout_toLeftOf="@+id/ibFollow"
+            android:layout_toStartOf="@+id/ibFollow"
             android:textColor="@color/tweetMisc"
             tools:text="TextView"
             android:text="@{user.tagLine}"/>
+
+        <ImageButton
+            android:id="@+id/ibFollow"
+            android:layout_width="40dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/ic_person_add"
+            android:background="@drawable/button_no_border"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

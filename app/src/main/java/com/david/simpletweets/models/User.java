@@ -49,6 +49,9 @@ public class User extends BaseModel implements Parcelable {
     @Column
     int followingsCount;
 
+    @Column
+    boolean isFollowing;
+
     public User() {
     }
 
@@ -70,11 +73,12 @@ public class User extends BaseModel implements Parcelable {
 
             user.name = jsonObject.getString("name");
             user.uid = uid;
-            user.screenName = "@" + jsonObject.getString("screen_name");
+            user.screenName = jsonObject.getString("screen_name");
             user.profileImageUrl = jsonObject.getString("profile_image_url");
             user.tagLine = jsonObject.getString("description");
             user.followersCount = jsonObject.getInt("followers_count");
             user.followingsCount = jsonObject.getInt("friends_count");
+            user.isFollowing = jsonObject.getBoolean("following");
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
@@ -109,7 +113,7 @@ public class User extends BaseModel implements Parcelable {
     }
 
     public String getScreenName() {
-        return screenName;
+        return "@" + screenName;
     }
 
     public String getProfileImageUrl() {
@@ -164,6 +168,14 @@ public class User extends BaseModel implements Parcelable {
         this.followingsCount = followingsCount;
     }
 
+    public boolean isFollowing() {
+        return isFollowing;
+    }
+
+    public void setFollowing(boolean following) {
+        isFollowing = following;
+    }
+
     private User(Parcel in) {
         this.name = in.readString();
         this.uid = in.readLong();
@@ -173,6 +185,7 @@ public class User extends BaseModel implements Parcelable {
         this.tagLine = in.readString();
         this.followersCount = in.readInt();
         this.followingsCount = in.readInt();
+        this.isFollowing = in.readByte() != 0;
     }
 
     @Override
@@ -190,6 +203,7 @@ public class User extends BaseModel implements Parcelable {
         parcel.writeString(this.tagLine);
         parcel.writeInt(this.followersCount);
         parcel.writeInt(this.followingsCount);
+        parcel.writeByte((byte) (this.isFollowing ? 1 : 0));
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
