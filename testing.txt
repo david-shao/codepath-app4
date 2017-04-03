@@ -1,0 +1,31 @@
+launch app
+scroll down timeline
+switch to mentions
+scroll down mentions
+click a tweet
+click retweet
+click favorite
+click reply
+send reply
+go back home
+click on profile
+scroll down tweets
+click on another profile picture (jaspreet)
+click on follow
+scroll down tweets
+click on followings
+click on follow
+click on followers
+slow internet speed
+scroll down followers
+resume normal internet speed
+go back home
+search for food
+click on @username
+go back
+click on #hashtag
+go back
+view direct messages
+go to sent
+compose new message
+send it
